@@ -59,6 +59,13 @@ function createHeartParticles() {
     }
 }
 
+function drawText(ctx) {
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 40px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText("Popy", canvas.width / 2, canvas.height / 2 + 100);
+}
+
 function animate() {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
@@ -68,6 +75,8 @@ function animate() {
         particle.update(mouse);
         particle.draw(ctx);
     });
+
+    drawText(ctx);
     requestAnimationFrame(animate);
 }
 
@@ -76,14 +85,27 @@ window.addEventListener('mousemove', (event) => {
     mouse.y = event.y;
 });
 
-window.addEventListener('resize', () => {
-    createHeartParticles();
-});
+window.addEventListener('touchmove', (event) => {
+    let touch = event.touches[0];
+    mouse.x = touch.clientX;
+    mouse.y = touch.clientY;
+}, { passive: true });
 
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener('touchstart', (event) => {
+    let touch = event.touches[0];
+    mouse.x = touch.clientX;
+    mouse.y = touch.clientY;
+}, { passive: true });
+
+function resizeCanvas() {
     const canvas = document.getElementById('canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     createHeartParticles();
+}
+
+window.addEventListener('resize', resizeCanvas);
+document.addEventListener("DOMContentLoaded", () => {
+    resizeCanvas();
     animate();
 });
